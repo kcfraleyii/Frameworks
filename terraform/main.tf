@@ -1,8 +1,4 @@
-# Create a VPC
-resource "aws_vpc" "example" {
-  cidr_block = "10.0.0.0/16"
-}
-
+# Create AWS instance
 resource "aws_instance" "beacon" {
   ami                  = "${atlas_artifact.beacon.metadata_full.region-us-west-2}"
   instance_type        = "t2.micro"
@@ -16,6 +12,7 @@ resource "aws_instance" "beacon" {
   }
 }
 
+# Create AWS Instance Security Group
 resource "aws_security_group" "beacon" {
   name        = "beacon"
   description = "Allow web traffic from the internet"
@@ -29,6 +26,7 @@ resource "aws_security_group" "beacon" {
   }
 }
 
+# Create VPC
 module "vpc" {
   source           = "../modules/vpc"
   aws_region       = "${var.aws_region}"
