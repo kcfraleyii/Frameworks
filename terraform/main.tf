@@ -19,8 +19,8 @@ resource "aws_security_group" "beacon" {
   vpc_id      = "${module.vpc.vpc_id}"
 
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -32,6 +32,6 @@ module "vpc" {
   aws_region       = "${var.aws_region}"
   environment      = "${var.environment}"
   vpc_cidr         = "${var.vpc_cidr}"
-  private_subnet_1 = "${var.private_subnet_1}"
-  bastion_ami      = "${atlas_artifact.bastion.metadata_full.region-us-west-2}"
+  private_subnet_1 = "${var.private_subnet}"
+  bastion_ami      = "${var.ami}"
 }
