@@ -32,6 +32,6 @@ module "vpc" {
   aws_region       = "${var.aws_region}"
   environment      = "${var.environment}"
   vpc_cidr         = "${var.vpc_cidr}"
-  private_subnet_1 = "${var.private_subnet}"
+  private_subnet   = "${var.private_subnet}"
   bastion_ami      = "${var.ami}"
 }
