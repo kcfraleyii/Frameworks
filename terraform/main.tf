@@ -1,8 +1,8 @@
 # Create AWS instance
 resource "aws_instance" "beacon" {
-  ami                  = "${atlas_artifact.beacon.metadata_full.region-us-west-2}"
+  ami                  = "${var.ami}"
   instance_type        = "t2.micro"
-  subnet_id            = "${module.vpc.subnet_dmz_1}"
+  subnet_id            = "${module.vpc.subnet}"
   security_groups      = ["${aws_security_group.beacon.id}","${module.vpc.allow_from_bastion_sg}"]
   iam_instance_profile = "beacon-role"
 
