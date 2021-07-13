@@ -3,7 +3,7 @@ resource "aws_instance" "beacon" {
   ami                  = "${var.ami}"
   instance_type        = "t2.micro"
   subnet_id            = "${module.vpc.subnet}"
-  security_groups      = ["${aws_security_group.beacon.id}","${module.vpc.allow_from_bastion_sg}"]
+  security_groups      = ["${aws_security_group.beacon.id}"]
   iam_instance_profile = "beacon-role"
 
   tags {
