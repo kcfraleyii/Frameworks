@@ -20,11 +20,11 @@ variable "environment" {
 variable "vpc_cidr" {
     description = "Default CIDR block"
     type        = string
-    default     = "10.0.0.0/24"
+    default     = ["10.0.0.0/24"]
 }
 
 variable "private_subnet" {
     description = "Default Private Subnet"
     type        = string
-    default     = ""
+    default     = ["10.128.0.0/24"]
 }
