@@ -5,6 +5,14 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 3.0"
     }
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+      version = "latest"
+    }
+    helm = {
+      source = "hashicorp/helm"
+      version = "latest"
+    }
   }
 }
 
@@ -19,5 +27,12 @@ provider "aws" {
 provider "kubernetes" {
   config_paths = [
     "/path/to/config_1.yaml"
+  ]
+}
+
+# Configure Helm Provider
+provider "helm" {
+  config_paths = [
+    "/path/to/config_helm.yaml"
   ]
 }
