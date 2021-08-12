@@ -26,7 +26,7 @@ provider "aws" {
 # Configure the Kubernetes Provider
 provider "kubernetes" {
   config_paths = [
-    "/path/to/config_1.yaml"
+    "/path/to/config_k8s.yaml"
   ]
 }
 
