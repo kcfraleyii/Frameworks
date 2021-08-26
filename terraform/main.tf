@@ -1,20 +1,20 @@
-# Create AWS instance
-resource "aws_instance" "beacon" {
+# Create AWS Instance
+resource "aws_instance" "server" {
   ami                  = "${var.ami}"
   instance_type        = "t2.micro"
   subnet_id            = "${module.vpc.subnet}"
   security_groups      = ["${aws_security_group.beacon.id}"]
-  iam_instance_profile = "beacon-role"
+  iam_instance_profile = "server-role"
 
   tags {
-    Name               = "beacon-${var.environment}"
+    Name               = "server-${var.environment}"
     Environment        = "${var.environment}"
   }
 }
 
-# Create AWS Instance Security Group
-resource "aws_security_group" "beacon" {
-  name        = "beacon"
+# Create AWS Security Group
+resource "aws_security_group" "server" {
+  name        = "server"
   description = "Allow web traffic from the internet"
   vpc_id      = "${module.vpc.vpc_id}"
 
@@ -26,7 +26,7 @@ resource "aws_security_group" "beacon" {
   }
 }
 
-# Create VPC
+# Create AWS VPC
 module "vpc" {
   source           = "../modules/vpc"
   aws_region       = "${var.aws_region}"
@@ -36,20 +36,24 @@ module "vpc" {
   bastion_ami      = "${var.ami}"
 }
 
+#Define AWS K8s Namespace
 data "kubectl_file_documents" "namespace" {
     content = file("../manifests/argocd/namespace.yaml")
 } 
 
+#Define ArgoCD for K8s Cluster
 data "kubectl_file_documents" "argocd" {
     content = file("../manifests/argocd/install.yaml")
 }
 
+#Create Defined Namespace
 resource "kubectl_manifest" "namespace" {
     count     = length(data.kubectl_file_documents.namespace.documents)
     yaml_body = element(data.kubectl_file_documents.namespace.documents, count.index)
     override_namespace = "argocd"
 }
 
+#Apply/Install Defined Manifest
 resource "kubectl_manifest" "argocd" {
     depends_on = [
       kubectl_manifest.namespace,
@@ -59,10 +63,12 @@ resource "kubectl_manifest" "argocd" {
     override_namespace = "argocd"
 }
 
+#Define ArgoCD Application
 data "kubectl_file_documents" "my-nginx-app" {
     content = file("../manifests/argocd/my-nginx-app.yaml")
 }
 
+#Apply Defined Manifest for Application running on ArgoCD
 resource "kubectl_manifest" "my-nginx-app" {
     depends_on = [
       kubectl_manifest.argocd,
